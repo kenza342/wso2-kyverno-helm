@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+
+metadata:
+  name: good-label
+  namespace: apim
+
+  labels:
+    app: wso2
+    environment: dev
+
+spec:
+
+  containers:
+
+  - name: nginx
+    image: docker.io/library/nginx:1.29

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+
+metadata:
+  name: bad-registry
+  namespace: apim
+
+spec:
+
+  containers:
+  - name: test
+    image: evil-registry.io/app:v1

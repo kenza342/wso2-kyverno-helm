@@ -1,0 +1,25 @@
+
+# Kubernetes secrets
+**/*secret*.yaml
+**/*secret*.yml
+
+# kube credentials
+.kube/
+
+# Sensitive values
+values-private.yaml
+
+# Allow Kyverno policies
+!kyverno/policies/good-secret.yaml
+!kyverno/policies/require-secret-admin.yaml
+
+# WSO2 sensitive files
+wso2-encryption-key.txt
+wso2-admin-secret.yaml
+
+# Encryption keys
+*encryption*
+*.key
+
+# kube credentials
+.kube/

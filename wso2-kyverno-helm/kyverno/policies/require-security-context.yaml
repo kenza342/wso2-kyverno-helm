@@ -1,0 +1,38 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+
+metadata:
+  name: require-security-context
+
+spec:
+  validationFailureAction: Enforce
+  background: true
+
+  rules:
+
+  - name: validate-security-context
+
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+
+    validate:
+
+      message: "Les conteneurs doivent avoir un securityContext sécurisé."
+
+      foreach:
+
+      - list: "request.object.spec.containers"
+
+        pattern:
+
+          securityContext:
+
+            allowPrivilegeEscalation: false
+
+            capabilities:
+
+              drop:
+              - ALL

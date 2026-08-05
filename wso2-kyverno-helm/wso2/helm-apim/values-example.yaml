@@ -1,0 +1,8 @@
+wso2:
+  apim:
+    configurations:
+      adminUsername: "admin"
+
+      existingSecret:
+        secretName: "wso2-admin-secret"
+        adminPasswordKey: "adminPassword"
