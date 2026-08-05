@@ -1,1 +1,18 @@
-*.log
+# Kubernetes secrets
+*.secret.yaml
+*-secret.yaml
+
+# Helm sensitive files
+*password*
+*token*
+*key*
+
+# Backups
+12-tests/backup/*
+
+# Certificates
+*.crt
+*.key
+
+# Temporary
+*.tmp

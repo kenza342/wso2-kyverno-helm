@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: auditor-sa
+  namespace: kyverno
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: auditor-clusterrole
+rules:
+  - apiGroups: ["*"]
+    resources: ["*"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: auditor-binding
+subjects:
+  - kind: ServiceAccount
+    name: auditor-sa
+    namespace: kyverno
+roleRef:
+  kind: ClusterRole
+  name: auditor-clusterrole
+  apiGroup: rbac.authorization.k8s.io

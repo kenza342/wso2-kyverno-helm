@@ -1,0 +1,41 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+
+metadata:
+
+ name: require-imagepullpolicy
+
+
+spec:
+
+ validationFailureAction: Enforce
+
+
+ rules:
+
+ - name: require-policy
+
+
+   match:
+
+    resources:
+
+     kinds:
+
+     - Pod
+
+
+   validate:
+
+    message:
+
+     imagePullPolicy required
+
+
+    pattern:
+
+     spec:
+
+      containers:
+
+      - imagePullPolicy: "?*"

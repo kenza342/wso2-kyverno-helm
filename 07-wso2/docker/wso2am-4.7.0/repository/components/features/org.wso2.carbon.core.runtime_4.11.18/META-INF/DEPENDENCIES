@@ -1,0 +1,201 @@
+// ------------------------------------------------------------------
+// Transitive dependencies of this project determined from the
+// maven pom organized by organization.
+// ------------------------------------------------------------------
+
+WSO2 Carbon - Carbon Runtime Feature
+
+
+From: 'an unknown organization'
+  - org.sat4j.core  org.eclipse:org.sat4j.core:jar:2.3.5.v201308161310
+
+  - org.sat4j.pb  org.eclipse:org.sat4j.pb:jar:2.3.5.v201308161310
+
+  - httpclient  org.eclipse.ecf.provider.filetransfer:httpclient:jar:4.0.200.v20120319-0616
+
+  - XZ for Java (https://tukaani.org/xz/java.html) org.tukaani:xz:jar:1.11
+    License: 0BSD 
+  - org.eclipse.osgi.compatibility.state  org.wso2.eclipse.osgi:org.eclipse.osgi.compatibility.state:jar:1.0.200.v20160504-1419
+
+
+From: 'Centre de Recherche en Informatique de Lens (CRIL)' (http://www.cril.univ-artois.fr/)
+  - SAT4J core (http://www.sat4j.org/org.ow2.sat4j.core/) org.ow2.sat4j:org.ow2.sat4j.core:jar:2.3.6
+    License: Eclipse Public License 1.0  (http://www.eclipse.org/org/documents/epl-v10.php)    License: GNU Lesser GPL 2.1  (http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html)
+  - SAT4J pseudo (http://www.sat4j.org/org.ow2.sat4j.pb/) org.ow2.sat4j:org.ow2.sat4j.pb:jar:2.3.6
+    License: Eclipse Public License 1.0  (http://www.eclipse.org/org/documents/epl-v10.php)    License: GNU Lesser GPL 2.1  (http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html)
+
+From: 'Codehaus' (http://codehaus.org)
+  - Animal Sniffer Annotations (http://mojo.codehaus.org/animal-sniffer/animal-sniffer-annotations) org.codehaus.mojo:animal-sniffer-annotations:jar:1.9
+    License: MIT license  (http://www.opensource.org/licenses/mit-license.php)
+
+From: 'Eclipse Foundation' (http://www.eclipse.org/)
+  - org.eclipse.ecf (https://www.eclipse.org/ecf/framework/bundles/org.eclipse.ecf/) org.eclipse.ecf:org.eclipse.ecf:eclipse-plugin:3.11.0
+    License: Eclipse Public License v1.0  (http://www.eclipse.org/legal/epl-v10.html)
+  - org.eclipse.ecf.filetransfer (https://www.eclipse.org/ecf/framework/bundles/org.eclipse.ecf.filetransfer/) org.eclipse.ecf:org.eclipse.ecf.filetransfer:eclipse-plugin:5.1.103
+    License: Eclipse Public License v1.0  (http://www.eclipse.org/legal/epl-v10.html)
+  - org.eclipse.ecf.identity (https://www.eclipse.org/ecf/framework/bundles/org.eclipse.ecf.identity/) org.eclipse.ecf:org.eclipse.ecf.identity:eclipse-plugin:3.10.0
+    License: Eclipse Public License v1.0  (http://www.eclipse.org/legal/epl-v10.html)
+  - org.eclipse.ecf.provider.filetransfer (https://www.eclipse.org/ecf/providers/bundles/org.eclipse.ecf.provider.filetransfer/) org.eclipse.ecf:org.eclipse.ecf.provider.filetransfer:eclipse-plugin:3.3.0
+    License: Eclipse Public License v1.0  (http://www.eclipse.org/legal/epl-v10.html)
+  - Declarative Services (http://www.eclipse.org/platform) org.eclipse.platform:org.eclipse.equinox.ds:jar:1.6.200
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Provisioning Artifact Repository Support (http://www.eclipse.org/platform) org.eclipse.platform:org.eclipse.equinox.p2.artifact.repository:jar:1.4.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Provisioning Console (http://www.eclipse.org/platform) org.eclipse.platform:org.eclipse.equinox.p2.console:jar:1.2.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Provisioning Core (http://www.eclipse.org/platform) org.eclipse.platform:org.eclipse.equinox.p2.core:jar:2.8.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Provisioning Director (http://www.eclipse.org/platform) org.eclipse.platform:org.eclipse.equinox.p2.director:jar:2.5.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Provisioning Director Application (http://www.eclipse.org/platform) org.eclipse.platform:org.eclipse.equinox.p2.director.app:jar:1.2.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Provisioning Directory Watcher (http://www.eclipse.org/platform) org.eclipse.platform:org.eclipse.equinox.p2.directorywatcher:jar:1.3.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Provisioning Engine (http://www.eclipse.org/platform) org.eclipse.platform:org.eclipse.equinox.p2.engine:jar:2.7.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Provisioning Extension Location Repository Support (http://www.eclipse.org/platform) org.eclipse.platform:org.eclipse.equinox.p2.extensionlocation:jar:1.4.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Provisioning Garbage Collector (http://www.eclipse.org/platform) org.eclipse.platform:org.eclipse.equinox.p2.garbagecollector:jar:1.2.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Provisioning JAR Processor (http://www.eclipse.org/platform) org.eclipse.platform:org.eclipse.equinox.p2.jarprocessor:jar:1.2.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Provisioning Metadata (http://www.eclipse.org/platform) org.eclipse.platform:org.eclipse.equinox.p2.metadata:jar:2.4.0
+    License: Eclipse Public License  (http://www.eclipse.org/legal/epl-v10.html)
+  - Equinox Provisioning Metadata Repository (http://www.eclipse.org/platform) org.eclipse.platform:org.eclipse.equinox.p2.metadata.repository:jar:1.4.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Provisioning Publisher Infrastructure (http://www.eclipse.org/platform) org.eclipse.platform:org.eclipse.equinox.p2.publisher:jar:1.6.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Provisioning Drop-in (http://www.eclipse.org/platform) org.eclipse.platform:org.eclipse.equinox.p2.reconciler.dropins:jar:1.4.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Provisioning Repository (http://www.eclipse.org/platform) org.eclipse.platform:org.eclipse.equinox.p2.repository:jar:2.5.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Provisioning Repository Tools (http://www.eclipse.org/platform) org.eclipse.platform:org.eclipse.equinox.p2.repository.tools:jar:2.3.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Provisioning Eclipse Touchpoint (http://www.eclipse.org/platform) org.eclipse.platform:org.eclipse.equinox.p2.touchpoint.eclipse:jar:2.3.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Provisioning Native Touchpoint (http://www.eclipse.org/platform) org.eclipse.platform:org.eclipse.equinox.p2.touchpoint.natives:jar:1.4.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Provisioning ECF based Transport (http://www.eclipse.org/platform) org.eclipse.platform:org.eclipse.equinox.p2.transport.ecf:jar:1.2.0
+    License: Eclipse Public License  (http://www.eclipse.org/legal/epl-v10.html)
+  - Equinox Provisioning Update Checker (http://www.eclipse.org/platform) org.eclipse.platform:org.eclipse.equinox.p2.updatechecker:jar:1.3.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Provisioning Legacy Update Site Support (http://www.eclipse.org/platform) org.eclipse.platform:org.eclipse.equinox.p2.updatesite:jar:1.2.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Util Bundle (http://www.eclipse.org/platform) org.eclipse.platform:org.eclipse.equinox.util:jar:1.1.300
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+
+From: 'Eclipse Foundation' (https://www.eclipse.org)
+  - Equinox Java Authentication and Authorization Service (JAAS) (https://github.com/eclipse-equinox/equinox/) org.eclipse.platform:org.eclipse.equinox.security:jar:1.4.600
+    License: EPL-2.0  (https://www.eclipse.org/legal/epl-2.0/)
+
+From: 'Eclipse Foundation' (https://www.eclipse.org/)
+  - Eclipse Content Mechanism (https://projects.eclipse.org/projects/eclipse.platform) org.eclipse.platform:org.eclipse.core.contenttype:jar:3.9.300
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Expression Language (https://projects.eclipse.org/projects/eclipse.platform) org.eclipse.platform:org.eclipse.core.expressions:jar:3.9.300
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Eclipse Jobs Mechanism (https://projects.eclipse.org/projects/eclipse.platform) org.eclipse.platform:org.eclipse.core.jobs:jar:3.15.200
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Core Runtime (https://projects.eclipse.org/projects/eclipse.platform) org.eclipse.platform:org.eclipse.core.runtime:jar:3.31.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Application Container (https://projects.eclipse.org/projects/eclipse.equinox) org.eclipse.platform:org.eclipse.equinox.app:jar:1.7.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Common Eclipse Runtime (https://projects.eclipse.org/projects/eclipse.equinox) org.eclipse.platform:org.eclipse.equinox.common:jar:3.19.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Concurrent API (https://projects.eclipse.org/projects/eclipse.equinox) org.eclipse.platform:org.eclipse.equinox.concurrent:jar:1.3.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Console plug-in (https://projects.eclipse.org/projects/eclipse.equinox) org.eclipse.platform:org.eclipse.equinox.console:jar:1.4.700
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Framework Admin (https://projects.eclipse.org/projects/eclipse.equinox) org.eclipse.platform:org.eclipse.equinox.frameworkadmin:jar:2.3.100
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Framework Admin for Equinox (https://projects.eclipse.org/projects/eclipse.equinox) org.eclipse.platform:org.eclipse.equinox.frameworkadmin.equinox:jar:1.3.100
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - OSGi service http APIs (https://projects.eclipse.org/projects/eclipse.equinox) org.eclipse.platform:org.eclipse.equinox.http.service.api:jar:1.2.2
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Launcher (https://projects.eclipse.org/projects/eclipse.equinox) org.eclipse.platform:org.eclipse.equinox.launcher:jar:1.6.700
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Launcher Linux X86_64 Fragment (https://projects.eclipse.org/projects/eclipse.equinox) org.eclipse.platform:org.eclipse.equinox.launcher.gtk.linux.x86_64:jar:1.2.900
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Equinox Provisioning Publisher for Eclipse (https://projects.eclipse.org/projects/eclipse.equinox) org.eclipse.platform:org.eclipse.equinox.p2.publisher.eclipse:jar:1.5.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Eclipse Preferences Mechanism (https://projects.eclipse.org/projects/eclipse.equinox) org.eclipse.platform:org.eclipse.equinox.preferences:jar:3.11.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Extension Registry Support (https://projects.eclipse.org/projects/eclipse.equinox) org.eclipse.platform:org.eclipse.equinox.registry:jar:3.12.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Simple Configurator (https://projects.eclipse.org/projects/eclipse.equinox) org.eclipse.platform:org.eclipse.equinox.simpleconfigurator:jar:1.5.200
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - Simple Configurator Manipulator (https://projects.eclipse.org/projects/eclipse.equinox) org.eclipse.platform:org.eclipse.equinox.simpleconfigurator.manipulator:jar:2.3.100
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - OSGi System Bundle (https://projects.eclipse.org/projects/eclipse.equinox) org.eclipse.platform:org.eclipse.osgi:jar:3.19.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - OSGi Release 4.2.0 Services (https://projects.eclipse.org/projects/eclipse.equinox) org.eclipse.platform:org.eclipse.osgi.services:jar:3.12.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+  - OSGi Release 4.2.0 Utility Classes (https://projects.eclipse.org/projects/eclipse.equinox) org.eclipse.platform:org.eclipse.osgi.util:jar:3.7.300
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+
+From: 'Eclipse Foundation'
+  - org.osgi:org.osgi.service.cm (https://docs.osgi.org/) org.osgi:org.osgi.service.cm:jar:1.6.1
+    License: Apache-2.0  (https://opensource.org/licenses/Apache-2.0)
+  - org.osgi:org.osgi.service.component (https://docs.osgi.org/) org.osgi:org.osgi.service.component:jar:1.5.1
+    License: Apache-2.0  (https://opensource.org/licenses/Apache-2.0)
+  - org.osgi:org.osgi.service.device (https://docs.osgi.org/) org.osgi:org.osgi.service.device:jar:1.1.1
+    License: Apache-2.0  (https://opensource.org/licenses/Apache-2.0)
+  - org.osgi:org.osgi.service.event (https://docs.osgi.org/) org.osgi:org.osgi.service.event:jar:1.4.1
+    License: Apache-2.0  (https://opensource.org/licenses/Apache-2.0)
+  - org.osgi:org.osgi.service.http.whiteboard (https://docs.osgi.org/) org.osgi:org.osgi.service.http.whiteboard:jar:1.1.1
+    License: Apache-2.0  (https://opensource.org/licenses/Apache-2.0)
+  - org.osgi:org.osgi.service.metatype (https://docs.osgi.org/) org.osgi:org.osgi.service.metatype:jar:1.4.1
+    License: Apache-2.0  (https://opensource.org/licenses/Apache-2.0)
+  - org.osgi:org.osgi.service.prefs (https://docs.osgi.org/) org.osgi:org.osgi.service.prefs:jar:1.1.2
+    License: Apache-2.0  (https://opensource.org/licenses/Apache-2.0)
+  - org.osgi:org.osgi.service.upnp (https://docs.osgi.org/) org.osgi:org.osgi.service.upnp:jar:1.2.1
+    License: Apache-2.0  (https://opensource.org/licenses/Apache-2.0)
+  - org.osgi:org.osgi.service.useradmin (https://docs.osgi.org/) org.osgi:org.osgi.service.useradmin:jar:1.1.1
+    License: Apache-2.0  (https://opensource.org/licenses/Apache-2.0)
+  - org.osgi:org.osgi.service.wireadmin (https://docs.osgi.org/) org.osgi:org.osgi.service.wireadmin:jar:1.0.2
+    License: Apache-2.0  (https://opensource.org/licenses/Apache-2.0)
+  - org.osgi:org.osgi.util.function (https://docs.osgi.org/) org.osgi:org.osgi.util.function:jar:1.2.0
+    License: Apache-2.0  (https://opensource.org/licenses/Apache-2.0)
+  - org.osgi:org.osgi.util.promise (https://docs.osgi.org/) org.osgi:org.osgi.util.promise:jar:1.3.0
+    License: Apache-2.0  (https://opensource.org/licenses/Apache-2.0)
+  - org.osgi:org.osgi.util.xml (https://docs.osgi.org/) org.osgi:org.osgi.util.xml:jar:1.0.2
+    License: Apache-2.0  (https://opensource.org/licenses/Apache-2.0)
+  - org.osgi:osgi.annotation (https://docs.osgi.org/) org.osgi:osgi.annotation:jar:8.0.1
+    License: Apache-2.0  (https://opensource.org/licenses/Apache-2.0)
+
+From: 'Mort Bay Consulting' (http://www.mortbay.com)
+  - Jetty :: Servlet API and Schemas for JPMS and OSGi (https://eclipse.org/jetty/jetty-servlet-api) org.eclipse.jetty.toolchain:jetty-servlet-api:jar:4.0.6
+    License: Apache Software License - Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)    License: Eclipse Public License - Version 1.0  (http://www.eclipse.org/org/documents/epl-v10.php)
+
+From: 'OSGi Alliance' (http://www.osgi.org/)
+  - org.osgi:org.osgi.namespace.extender (http://www.osgi.org/) org.osgi:org.osgi.namespace.extender:jar:1.0.1
+    License: Apache License, Version 2.0  (http://opensource.org/licenses/apache2.0.php)
+  - org.osgi:org.osgi.namespace.implementation (http://www.osgi.org/) org.osgi:org.osgi.namespace.implementation:jar:1.0.0
+    License: Apache License, Version 2.0  (http://opensource.org/licenses/apache2.0.php)
+  - org.osgi:org.osgi.service.provisioning (http://www.osgi.org/) org.osgi:org.osgi.service.provisioning:jar:1.2.0
+    License: Apache License, Version 2.0  (http://opensource.org/licenses/apache2.0.php)
+  - org.osgi:org.osgi.util.position (http://www.osgi.org/) org.osgi:org.osgi.util.position:jar:1.0.1
+    License: Apache License, Version 2.0  (http://opensource.org/licenses/apache2.0.php)
+
+From: 'OSGi Alliance' (https://www.osgi.org/)
+  - org.osgi:org.osgi.service.permissionadmin (https://www.osgi.org/) org.osgi:org.osgi.service.permissionadmin:jar:1.2.1
+    License: Apache-2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+  - org.osgi:org.osgi.util.measurement (https://www.osgi.org/) org.osgi:org.osgi.util.measurement:jar:1.0.2
+    License: Apache-2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+
+From: 'The Apache Software Foundation' (https://www.apache.org/)
+  - Apache Felix Gogo Command (http://felix.apache.org/) org.apache.felix:org.apache.felix.gogo.command:bundle:1.1.2
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache Felix Gogo Runtime (http://felix.apache.org/) org.apache.felix:org.apache.felix.gogo.runtime:bundle:1.1.6
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache Felix Gogo Shell (http://felix.apache.org/) org.apache.felix:org.apache.felix.gogo.shell:bundle:1.1.4
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache Felix Declarative Services (https://felix.apache.org/org.apache.felix.scr/) org.apache.felix:org.apache.felix.scr:bundle:2.2.10
+    License: Apache-2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'WSO2 LLC' (http://wso2.com)
+  - WSO2 Carbon - OSGi Security (http://wso2.org) org.wso2.carbon:org.wso2.carbon.osgi.security:bundle:4.11.18
+    License: Apache License Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+
+
+
+
