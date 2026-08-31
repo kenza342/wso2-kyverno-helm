@@ -1,0 +1,22 @@
+NAME                                                          READY   STATUS    RESTARTS      AGE
+pod/apim-wso2am-all-in-one-am-deployment-1-86ccf955bd-59827   1/1     Running   1 (17m ago)   27h
+pod/good-probe                                                1/1     Running   4 (26h ago)   3d3h
+
+NAME                                          TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                                                                                     AGE
+service/apim-wso2am-all-in-one-am-service     ClusterIP   10.105.8.175    <none>        8280/TCP,8243/TCP,9611/TCP,9711/TCP,5672/TCP,9443/TCP,9021/TCP,8021/TCP,8099/TCP,9099/TCP   8d
+service/apim-wso2am-all-in-one-am-service-1   ClusterIP   10.108.21.127   <none>        8280/TCP,8243/TCP,9611/TCP,9711/TCP,5672/TCP,9443/TCP,9021/TCP,8021/TCP,8099/TCP,9099/TCP   8d
+
+NAME                                                     READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/apim-wso2am-all-in-one-am-deployment-1   1/1     1            1           8d
+
+NAME                                                                DESIRED   CURRENT   READY   AGE
+replicaset.apps/apim-wso2am-all-in-one-am-deployment-1-74fbd4c4     0         0         0       8d
+replicaset.apps/apim-wso2am-all-in-one-am-deployment-1-75594dbb8    0         0         0       2d1h
+replicaset.apps/apim-wso2am-all-in-one-am-deployment-1-7cbf54bf86   0         0         0       27h
+replicaset.apps/apim-wso2am-all-in-one-am-deployment-1-7cd7c869bc   0         0         0       3d10h
+replicaset.apps/apim-wso2am-all-in-one-am-deployment-1-7d45f4887c   0         0         0       8d
+replicaset.apps/apim-wso2am-all-in-one-am-deployment-1-7d7bf998c5   0         0         0       2d2h
+replicaset.apps/apim-wso2am-all-in-one-am-deployment-1-7d976f8444   0         0         0       2d1h
+replicaset.apps/apim-wso2am-all-in-one-am-deployment-1-8475c995fd   0         0         0       2d2h
+replicaset.apps/apim-wso2am-all-in-one-am-deployment-1-847d6fdf55   0         0         0       27h
+replicaset.apps/apim-wso2am-all-in-one-am-deployment-1-86ccf955bd   1         1         1       27h

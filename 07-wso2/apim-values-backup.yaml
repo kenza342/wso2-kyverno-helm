@@ -164,8 +164,8 @@ kubernetes:
       enabled: false
       hostname: websub.wso2.com
   securityContext:
-    runAsGroup: 10001
-    runAsUser: 10001
+    runAsGroup: 1001
+    runAsUser: 1001
     seLinux:
       enabled: false
       level: ""
@@ -239,7 +239,6 @@ wso2:
       databases:
         apim_db:
           password: ChangeMe_Wso2!
-          driver: com.mysql.cj.jdbc.Driver
           poolParameters:
             defaultAutoCommit: true
             maxActive: 100
@@ -248,11 +247,12 @@ wso2:
             testOnBorrow: true
             testWhileIdle: true
             validationInterval: 30000
-          url : "jdbc:mysql://mysql-svc.database.svc.cluster.local:3306/apim_db?useSSL=false&allowPublicKeyRetrieval=true"
+          url: jdbc:mysql://mysql-svc.wso2.svc.cluster.local:3306/apim_db?useSSL=false
           username: wso2carbon
+        jdbc:
+          driver: com.mysql.cj.jdbc.Driver
         shared_db:
           password: ChangeMe_Wso2!
-          driver: com.mysql.cj.jdbc.Driver
           poolParameters:
             defaultAutoCommit: true
             maxActive: 100
@@ -261,7 +261,7 @@ wso2:
             testOnBorrow: true
             testWhileIdle: true
             validationInterval: 30000
-          url : "jdbc:mysql://mysql-svc.database.svc.cluster.local:3306/shared_db?useSSL=false&allowPublicKeyRetrieval=true"
+          url: jdbc:mysql://mysql-svc.wso2.svc.cluster.local:3306/apim_db?useSSL=false
           username: wso2carbon
         type: mysql
       devportal:
@@ -281,13 +281,10 @@ wso2:
         enableRatings: null
         loginUsernameCaseInsensitive: null
         mode: HYBRID
-        adminUser:
-        username: "admin"
-        password: " Inetum-Wso2-Secure-2026"
-        encryption:
+      encryption:
         cipherTransformation: AES/GCM/NoPadding
         internalCryptoProvider: org.wso2.carbon.crypto.provider.SymmetricKeyInternalCryptoProvider
-        key: "912886127e161a594a6c8f5f630a741d7d6b3be107c646c75343f086bef15dd6"
+        key: cbdc8f7d11709d520f553a26753ca8735238fec53900ac3fddc5a25bca4c602a
       eventHandlers:
       - name: userPostSelfRegistration
         subscriptions:
@@ -300,11 +297,11 @@ wso2:
           notificationEndpoint: https://localhost:${mgt.transport.https.port}/internal/data/v1/notify
         type: org.wso2.carbon.identity.core.handler.AbstractIdentityHandler
       existingSecret:
-        adminPasswordKey: "adminPassword"
-        apimDBPasswordKey: ""
-        encryptionKeyKey: "encryptionKey"
-        secretName: "apim-creds"
-        sharedDBPasswordKey: ""
+        adminPasswordKey: adminPassword
+        apimDBPasswordKey: apimDBPassword
+        encryptionKeyKey: encryptionKey
+        secretName: wso2-admin-secret
+        sharedDBPasswordKey: sharedDBPassword
       extraConfigs: null
       gateway:
         environments:
@@ -532,6 +529,7 @@ wso2:
           type: ""
           workerThreads: 10
       userStore:
+        properties: null
         type: database_unique_id
       workflow:
         callbackEndpoint: ""
@@ -547,24 +545,58 @@ wso2:
     portOffset: 0
     secureVaultEnabled: false
     startupArgs: ""
-  version: 4.7.0
-
+    version: 4.7.0
   deployment:
-    toml: |
-      [super_admin]
-      username = "admin"
-
-      [system]
-      hostname = "localhost"
-
+    envs: {}
     highAvailability: false
-
     image:
-      registry: "docker.io"
-      repository: "wso2am"
-      tag: "4.7.0-mysql"
       digest: ""
-      imagePullPolicy: "IfNotPresent"
-
-  env:
-    value: "ChangeMe_Wso2!"    
+      imagePullPolicy: IfNotPresent
+      imagePullSecrets:
+        enabled: false
+        password: ""
+        username: ""
+      registry: docker.io
+      repository: wso2am
+      tag: 4.7.0-exec-fixed
+    lifecycle:
+      preStopHook:
+        sleepSeconds: 10
+    livenessProbe:
+      failureThreshold: 10
+      initialDelaySeconds: 180
+      periodSeconds: 20
+    minAvailable: 50%
+    nodeSelector: null
+    persistence:
+      solrIndexing:
+        capacity:
+          carbonDatabase: 50M
+          solrIndexedData: 50M
+        enabled: false
+    pod:
+      annotations: {}
+    readinessProbe:
+      failureThreshold: 10
+      initialDelaySeconds: 180
+      periodSeconds: 20
+    resources:
+      jvm:
+        memory:
+          xms: 2048m
+          xmx: 2048m
+      limits:
+        cpu: 3000m
+        memory: 3Gi
+      requests:
+        cpu: 2000m
+        memory: 2Gi
+    startupProbe:
+      failureThreshold: 15
+      initialDelaySeconds: 180
+      periodSeconds: 20
+  moesifAnalytics:
+    enabled: false
+    key: YOUR_MOESIF_API_KEY_HERE
+    moesif_base_url: https://api.moesif.net
+    send_headers: false

@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-gateway
+  namespace: apim
+
+spec:
+
+  podSelector:
+    matchLabels:
+      app: apim-wso2am-all-in-one
+
+  policyTypes:
+  - Ingress
+
+  ingress:
+
+  - ports:
+    - protocol: TCP
+      port: 8243
+
+    - protocol: TCP
+      port: 8280

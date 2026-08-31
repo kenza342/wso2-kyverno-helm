@@ -1,0 +1,274 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    checksum.am.conf: 40dd41bc9eb4555eb7cb522f00dd247ff4d83ede318728cc948660737ab89466
+    checksum.am.conf.log4j2: fa21dfd411e20e2311259f13dd2816dc268a8fdc84b1acb133e3dfc239657e5b
+    checksum.am.conf.secret-conf: 6931efed2d9b235c16cb2483d011065a68d48e84e9adb262621f41a66645fbfb
+    kubectl.kubernetes.io/restartedAt: "2026-08-14T08:04:36+13:00"
+  creationTimestamp: "2026-08-18T11:22:54Z"
+  generateName: apim-wso2am-all-in-one-am-deployment-1-74fb46ffb8-
+  generation: 1
+  labels:
+    deployment: apim-wso2am-all-in-one-am
+    node: apim-wso2am-all-in-one-am-1
+    pod-template-hash: 74fb46ffb8
+    product: apim
+  name: apim-wso2am-all-in-one-am-deployment-1-74fb46ffb8-q8zv7
+  namespace: apim
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ReplicaSet
+    name: apim-wso2am-all-in-one-am-deployment-1-74fb46ffb8
+    uid: a852910c-b7ff-4e7c-838c-31909b0e2ea5
+  resourceVersion: "1045800"
+  uid: bbbd9488-7603-44e9-89a6-ac8b077696d7
+spec:
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+            - key: deployment
+              operator: In
+              values:
+              - apim-wso2am-all-in-one
+          topologyKey: topology.kubernetes.io/zone
+        weight: 100
+  containers:
+  - command:
+    - /bin/bash
+    - /home/wso2carbon/docker-entrypoint.sh
+    env:
+    - name: NODE_IP
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: status.podIP
+    - name: JVM_MEM_OPTS
+      value: -Xms2048m -Xmx2048m
+    - name: WSO2_ADMIN_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          key: adminPassword
+          name: apim-creds
+    - name: WSO2_ENCRYPTION_KEY
+      valueFrom:
+        secretKeyRef:
+          key: encryptionKey
+          name: apim-creds
+    image: docker.io/wso2am:4.7.0-mysql
+    imagePullPolicy: IfNotPresent
+    lifecycle:
+      preStop:
+        exec:
+          command:
+          - sh
+          - -c
+          - |
+            echo "Pre stop hook triggered"; sleep 10; echo "Shutdown APIM Server"; ${WSO2_SERVER_HOME}/bin/api-manager.sh stop
+    livenessProbe:
+      failureThreshold: 5
+      httpGet:
+        path: /services/Version
+        port: 9763
+        scheme: HTTP
+      initialDelaySeconds: 60
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+    name: wso2am
+    ports:
+    - containerPort: 8280
+      protocol: TCP
+    - containerPort: 8243
+      protocol: TCP
+    - containerPort: 9763
+      protocol: TCP
+    - containerPort: 9443
+      protocol: TCP
+    - containerPort: 9711
+      protocol: TCP
+    - containerPort: 9611
+      protocol: TCP
+    - containerPort: 5672
+      protocol: TCP
+    readinessProbe:
+      failureThreshold: 5
+      httpGet:
+        path: /api/am/gateway/v2/server-startup-healthcheck
+        port: 9443
+        scheme: HTTPS
+      initialDelaySeconds: 60
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+    resources:
+      limits:
+        cpu: "3"
+        memory: 3Gi
+      requests:
+        cpu: "2"
+        memory: 2Gi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      runAsGroup: 1001
+      runAsNonRoot: true
+      runAsUser: 1001
+    startupProbe:
+      exec:
+        command:
+        - /bin/sh
+        - -c
+        - timeout 1 bash -c "</dev/tcp/localhost/9443"
+      failureThreshold: 5
+      initialDelaySeconds: 60
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /home/wso2carbon/wso2-config-volume/repository/conf/deployment.toml
+      name: wso2am-conf
+      subPath: deployment.toml
+    - mountPath: /home/wso2carbon/wso2-config-volume/repository/conf/log4j2.properties
+      name: wso2am-log4j2
+      subPath: log4j2.properties
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-cx96v
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: minikube
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext:
+    seccompProfile:
+      type: RuntimeDefault
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - configMap:
+      defaultMode: 263
+      name: apim-wso2am-all-in-one-am-conf-1
+    name: wso2am-conf
+  - configMap:
+      defaultMode: 263
+      name: apim-wso2am-all-in-one-conf-log4j2
+    name: wso2am-log4j2
+  - name: kube-api-access-cx96v
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2026-08-18T11:22:56Z"
+    observedGeneration: 1
+    status: "True"
+    type: PodReadyToStartContainers
+  - lastProbeTime: null
+    lastTransitionTime: "2026-08-18T11:22:54Z"
+    observedGeneration: 1
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2026-08-18T11:22:54Z"
+    message: 'containers with unready status: [wso2am]'
+    observedGeneration: 1
+    reason: ContainersNotReady
+    status: "False"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2026-08-18T11:22:54Z"
+    message: 'containers with unready status: [wso2am]'
+    observedGeneration: 1
+    reason: ContainersNotReady
+    status: "False"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2026-08-18T11:22:54Z"
+    observedGeneration: 1
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - allocatedResources:
+      cpu: "2"
+      memory: 2Gi
+    containerID: docker://1155df753f50beeacfa5b6b3b60cd14c7ff41f7c9d50bab78eb4508013f03d66
+    image: wso2am:4.7.0-mysql
+    imageID: docker://sha256:4c4be22a13de1397fa6faca1bd7587ad995e9a1ea4f0f97fa9ed082d48af1115
+    lastState:
+      terminated:
+        containerID: docker://1155df753f50beeacfa5b6b3b60cd14c7ff41f7c9d50bab78eb4508013f03d66
+        exitCode: 126
+        finishedAt: "2026-08-18T11:24:16Z"
+        reason: Error
+        startedAt: "2026-08-18T11:24:16Z"
+    name: wso2am
+    ready: false
+    resources:
+      limits:
+        cpu: "3"
+        memory: 3Gi
+      requests:
+        cpu: "2"
+        memory: 2Gi
+    restartCount: 4
+    started: false
+    state:
+      waiting:
+        message: back-off 1m20s restarting failed container=wso2am pod=apim-wso2am-all-in-one-am-deployment-1-74fb46ffb8-q8zv7_apim(bbbd9488-7603-44e9-89a6-ac8b077696d7)
+        reason: CrashLoopBackOff
+    volumeMounts:
+    - mountPath: /home/wso2carbon/wso2-config-volume/repository/conf/deployment.toml
+      name: wso2am-conf
+    - mountPath: /home/wso2carbon/wso2-config-volume/repository/conf/log4j2.properties
+      name: wso2am-log4j2
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-cx96v
+      readOnly: true
+      recursiveReadOnly: Disabled
+  hostIP: 192.168.49.2
+  hostIPs:
+  - ip: 192.168.49.2
+  observedGeneration: 1
+  phase: Running
+  podIP: 10.244.1.152
+  podIPs:
+  - ip: 10.244.1.152
+  qosClass: Burstable
+  startTime: "2026-08-18T11:22:54Z"

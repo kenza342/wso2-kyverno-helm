@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bad-wso2
+  namespace: apim
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bad-wso2
+  template:
+    metadata:
+      labels:
+        app: bad-wso2
+    spec:
+      containers:
+        - name: bad-wso2
+          image: nginx:latest
+          env:
+            - name: WSO2_ADMIN_PASSWORD
+              value: "admin"

@@ -164,8 +164,8 @@ kubernetes:
       enabled: false
       hostname: websub.wso2.com
   securityContext:
-    runAsGroup: 10001
-    runAsUser: 10001
+    runAsGroup: 1001
+    runAsUser: 1001
     seLinux:
       enabled: false
       level: ""
@@ -239,7 +239,6 @@ wso2:
       databases:
         apim_db:
           password: ChangeMe_Wso2!
-          driver: com.mysql.cj.jdbc.Driver
           poolParameters:
             defaultAutoCommit: true
             maxActive: 100
@@ -248,11 +247,12 @@ wso2:
             testOnBorrow: true
             testWhileIdle: true
             validationInterval: 30000
-          url : "jdbc:mysql://mysql-svc.database.svc.cluster.local:3306/apim_db?useSSL=false&allowPublicKeyRetrieval=true"
+          url: jdbc:mysql://mysql-svc.wso2.svc.cluster.local:3306/apim_db?useSSL=false
           username: wso2carbon
+        jdbc:
+          driver: com.mysql.cj.jdbc.Driver
         shared_db:
           password: ChangeMe_Wso2!
-          driver: com.mysql.cj.jdbc.Driver
           poolParameters:
             defaultAutoCommit: true
             maxActive: 100
@@ -261,7 +261,7 @@ wso2:
             testOnBorrow: true
             testWhileIdle: true
             validationInterval: 30000
-          url : "jdbc:mysql://mysql-svc.database.svc.cluster.local:3306/shared_db?useSSL=false&allowPublicKeyRetrieval=true"
+          url: jdbc:mysql://mysql-svc.wso2.svc.cluster.local:3306/apim_db?useSSL=false
           username: wso2carbon
         type: mysql
       devportal:
@@ -283,7 +283,7 @@ wso2:
         mode: HYBRID
         adminUser:
         username: "admin"
-        password: " Inetum-Wso2-Secure-2026"
+        password: "Inetum@Wso2Secure2026!"
         encryption:
         cipherTransformation: AES/GCM/NoPadding
         internalCryptoProvider: org.wso2.carbon.crypto.provider.SymmetricKeyInternalCryptoProvider
@@ -532,6 +532,7 @@ wso2:
           type: ""
           workerThreads: 10
       userStore:
+        properties: null
         type: database_unique_id
       workflow:
         callbackEndpoint: ""
@@ -548,7 +549,6 @@ wso2:
     secureVaultEnabled: false
     startupArgs: ""
   version: 4.7.0
-
   deployment:
     toml: |
       [super_admin]
@@ -556,15 +556,9 @@ wso2:
 
       [system]
       hostname = "localhost"
-
-    highAvailability: false
-
-    image:
-      registry: "docker.io"
-      repository: "wso2am"
-      tag: "4.7.0-mysql"
-      digest: ""
-      imagePullPolicy: "IfNotPresent"
-
   env:
-    value: "ChangeMe_Wso2!"    
+      value: "ChangeMe_Wso2!"
+  highAvailability: false
+  image:
+    digest: ""
+    imagePullPolicy: "IfNotPresent"

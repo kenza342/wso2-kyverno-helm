@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: good-wso2
+  namespace: apim
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: good-wso2
+  template:
+    metadata:
+      labels:
+        app: good-wso2
+    spec:
+      containers:
+        - name: good-wso2
+          image: nginx:latest
+          env:
+            - name: WSO2_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: wso2-admin-secret
+                  key: adminPassword

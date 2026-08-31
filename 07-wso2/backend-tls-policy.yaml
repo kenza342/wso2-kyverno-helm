@@ -1,0 +1,16 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: BackendTLSPolicy
+metadata:
+  name: wso2-backend-tls
+  namespace: apim
+spec:
+  targetRefs:
+    - group: ""
+      kind: Service
+      name: apim-wso2am-all-in-one-am-service
+  validation:
+    caCertificateRefs:
+      - group: ""
+        kind: ConfigMap
+        name: wso2-backend-ca
+    hostname: localhost

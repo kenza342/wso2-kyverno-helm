@@ -1,0 +1,931 @@
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-pdb.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: apim-wso2am-all-in-one-pdb
+spec:
+  minAvailable: "50%"
+  selector:
+    matchLabels:
+      deployment: apim-wso2am-all-in-one-am
+---
+# Source: wso2am-all-in-one/templates/am/instance-1/wso2am-conf.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: apim-wso2am-all-in-one-am-conf-1
+  namespace : apim
+data:
+  deployment.toml: "[server]\nhostname = \"am.wso2.com\"\nnode_ip = \"$env{NODE_IP}\"\noffset = 0\nbase_path = \"${carbon.protocol}://${carbon.host}:${carbon.management.port}\"\n#discard_empty_caches = false\nserver_role = \"default\"\n\n[user_store]\n#type = \"database_unique_id\"\ntype = \"database_unique_id\"\n\n[super_admin]\nusername = \"admin\"\npassword = \"$env{WSO2_ADMIN_PASSWORD}\"\ncreate_admin_account = true\n\n#[4database.apim_db]\n#type = \"h2\"\n#url = \"jdbc:h2:./repository/database/WSO2SHARED_DB;DB_CLOSE_ON_EXIT=FALSE\"\n#username = \"wso2carbon\"\n#password = \"wso2carbon\"\n#driver = \"org.h2.Driver\"\n[database.apim_db]\ntype = \"mysql\"\nurl = \"jdbc:mysql://10.98.120.0:3306/apim_db?useSSL=false\"\nusername = \"wso2carbon\"\npassword = \"ChangeMe_Wso2!\"\ndriver = \"com.mysql.cj.jdbc.Driver\"\n#type = \"mysql\"\n#url = \"jdbc:mysql://10.98.120.0:3306/apim_db?useSSL=false\"\n#username = \"wso2carbon\"\n#\n#password = \"ChangeMe_Wso2!\"\n#\n#driver = \"com.mysql.cj.jdbc.Driver\"\n\n[database.apim_db.pool_options]\ndefaultAutoCommit = \"true\"\nmaxActive = \"100\"\nmaxWait = \"60000\"\nminIdle = \"5\"\ntestOnBorrow = \"true\"\ntestWhileIdle = \"true\"\nvalidationInterval = \"30000\"\n\n[database.shared_db]\ntype = \"mysql\"\nurl = \"jdbc:mysql://10.98.120.0:3306/shared_db?useSSL=false\"\nusername = \"wso2carbon\"\npassword = \"ChangeMe_Wso2!\"\ndriver = \"com.mysql.cj.jdbc.Driver\"\n\n[database.shared_db.pool_options]\ndefaultAutoCommit = \"true\"\nmaxActive = \"100\"\nmaxWait = \"60000\"\nminIdle = \"5\"\ntestOnBorrow = \"true\"\ntestWhileIdle = \"true\"\nvalidationInterval = \"30000\"\n\n[apim]\ngateway_type = \"Regular,APK,AWS,Azure,Kong\"\n\n[keystore]\n[keystore.tls]\ntype = \"JKS\"\nfile_name = \"wso2carbon.jks\"\nalias = \"wso2carbon\"\npassword = \"wso2carbon\"\nkey_password = \"wso2carbon\"\n\n[truststore]\ntype = \"JKS\"\nfile_name = \"client-truststore.jks\"\npassword = \"\"\n[[apim.gateway.environment]]\nname = \"Default\"\ntype = \"hybrid\"\ngateway_type = \"Regular\"\nprovider = \"wso2\"\ndisplay_in_api_console = true\ndescription = \"This is a hybrid gateway that handles both production and sandbox token traffic.\"\nshow_as_token_endpoint_url = true\nservice_url = \"https://apim-wso2am-all-in-one-am-service:9443/services/\"\nusername= \"${admin.username}\"\npassword= \"${admin.password}\"\nws_endpoint = \"ws://websocket.wso2.com\"\nwss_endpoint = \"wss://websocket.wso2.com\"\nhttp_endpoint = \"http://gw.wso2.com\"\nhttps_endpoint = \"https://gw.wso2.com\"\nwebsub_event_receiver_http_endpoint = \"http://websub.wso2.com\"\nwebsub_event_receiver_https_endpoint = \"https://websub.wso2.com\"\n\n[apim.sync_runtime_artifacts.gateway]\ngateway_labels = [\"Default\"]\n\n# Caches\n[apim.cache.gateway_token]\nenable = true\nexpiry_time = \"15m\"\n\n[apim.cache.resource]\nenable = true\nexpiry_time = \"900s\"\n\n[apim.cache.km_token]\nenable = true\nexpiry_time = \"15m\"\n\n[apim.cache.recent_apis]\nenable = false\n\n[apim.cache.scopes]\nenable = false\n\n[apim.cache.publisher_roles]\nenable = false\n\n[apim.cache.jwt_claim]\nenable = true\nexpiry_time = \"15m\"\n\n[apim.cache.tags]\nenable = true\nexpiry_time = \"2m\"\n\n[apim.analytics]\nenable = false\n\n[apim.ai]\nenable = false\n\n[apim.mcp]\nenable = true\n\n[transport.http]\nproperties.port = 9763\nproperties.proxyPort = 80\n\n[transport.https]\nproperties.port = 9443\nproperties.proxyPort = 443\n\n# key manager implementation\n[apim.key_manager]\nservice_url = \"https://apim-wso2am-all-in-one-am-service:9443/services/\"\nusername= \"$ref{super_admin.username}\"\npassword= \"$ref{super_admin.password}\"\nenable_lightweight_apikey_generation = true\nallow_subscription_validation_disabling = true\nskip_create_resident_key_manager = false\n\n[apim.transaction_counter]\nenable = false\nserver_id = \"Gateway\"\n\n[oauth.grant_type.token_exchange]\nenable = true\nallow_refresh_tokens = true\niat_validity_period = \"1h\"\n\n#[apim.idp]\n#server_url = \"https://localhost:${mgt.transport.https.port}\"\n#authorize_endpoint = \"https://localhost:${mgt.transport.https.port}/oauth2/authorize\"\n#oidc_logout_endpoint = \"https://localhost:${mgt.transport.https.port}/oidc/logout\"\n#oidc_check_session_endpoint = \"https://localhost:${mgt.transport.https.port}/oidc/checksession\"\n\n# JWT Generation\n\n[oauth.multiple_client_secrets]\nenable = true\n\n[[oauth.extensions.token_types]]\nname = \"JWT\"\nissuer = \"org.wso2.is.key.manager.tokenpersistence.issuer.ExtendedJWTTokenIssuer\"\n\n[apim.devportal]\nurl = \"https://am.wso2.com/devportal\"\nmode = \"HYBRID\"\n\n[apim.publisher]\nenable_api_doc_visibility = false\n\n[apim.cors]\nenable = true\nallow_origins = [\"*\"]\nallow_methods = [\"GET\",\"PUT\",\"POST\",\"DELETE\",\"PATCH\",\"OPTIONS\"]\nallow_headers = [\"authorization\",\"Access-Control-Allow-Origin\",\"Content-Type\",\"SOAPAction\",\"apikey\",\"Internal-Key\"]\nallow_credentials = false\nenable_validation_for_ws = false\n\n[apim.throttling.blacklist_condition]\n\n# [[apim.throttling.url_group]]\n# traffic_manager_urls = [\"tcp://apim-wso2am-all-in-one-am-service:9611\"]\n# traffic_manager_auth_urls = [\"ssl://apim-wso2am-all-in-one-am-service:9711\"]\n# type = \"failover\"\n\n# Data Bridge Configuration\n# [transport.receiver]\n# type = \n# worker_threads = 10\n# session_timeout = \"\"\n# keystore.file_name = \"$ref{keystore.tls.file_name}\"\n# keystore.password = \"$ref{keystore.tls.password}\"\n# tcp_port = 9611\n# ssl_port = 9711\n# ssl_receiver_thread_pool_size = 100\n# tcp_receiver_thread_pool_size = 100\n# ssl_enabled_protocols = [TLSv1\",\"TLSv1.1\",\"TLSv1.2]\n# ciphers = [SSL_RSA_WITH_RC4_128_MD5\",\"SSL_RSA_WITH_RC4_128_SHA]\n\n# [apim.token.revocation]\n# notifier_impl = \"org.wso2.carbon.apimgt.keymgt.events.TokenRevocationNotifierImpl\"\n# enable_realtime_notifier = true\n# realtime_notifier_ttl = 5000\n# enable_persistent_notifier = true\n# persistent_notifier_hostname = \"https://localhost:2379/v2/keys/jti/\"\n# persistent_notifier_ttl = 5000\n# persistent_notifier_username = \"root\"\n# persistent_notifier_password = \"root\"\n[[event_handler]]\nname = \"userPostSelfRegistration\"\nsubscriptions = [\"POST_ADD_USER\", ]\n\n[service_provider]\nsp_name_regex = \"^[\\\\sa-zA-Z0-9._-]*$\"\n\n[system.parameter]\n\"org.wso2.CipherTransformation\" = \"AES/GCM/NoPadding\"\n\n[encryption]\ninternal_crypto_provider = \"org.wso2.carbon.crypto.provider.SymmetricKeyInternalCryptoProvider\"\nkey = \"$env{WSO2_ENCRYPTION_KEY}\"\n\n[[event_listener]]\nid = \"token_revocation\"\ntype = \"org.wso2.carbon.identity.core.handler.AbstractIdentityHandler\"\nname = \"org.wso2.is.notification.ApimOauthEventInterceptor\"\norder = 1\n\n[event_listener.properties]\nnotification_endpoint = \"https://apim-wso2am-all-in-one-am-service:${mgt.transport.https.port}/internal/data/v1/notify\"\nusername = \"${admin.username}\"\npassword = \"${admin.password}\"\n'header.X-WSO2-KEY-MANAGER' = \"default\"\n[database.local]\nurl = \"jdbc:h2:./repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE\"\n[apim.sdk]\nsupported_languages = [\"android\",\"java\",\"csharp\",\"dart\",\"groovy\",\"javascript\",\"jmeter\",\"perl\",\"php\",\"python\",\"ruby\",\"swift5\",\"clojure\"]\n\n[apim.organization_based_access_control]\nenable = true\norganization_name_local_claim = \"http://wso2.org/claims/organization\"\norganization_id_local_claim = \"http://wso2.org/claims/organizationId\"\n\n[apim.gateway_notification]\nenabled = true\ngateway_id = \"\"\n\n[apim.gateway_notification.heartbeat]\nnotify_interval = \"1m\"\n\n[apim.gateway_notification.deployment_ack]\nbatch_size = 100\nbatch_interval = \"2s\"\nmax_retry_count = 5\nretry_duration = \"10s\"\nretry_progression_factor = 2\nbatch_processor_min_thread = 2\nbatch_processor_max_thread = 8\nbatch_processor_keep_alive = \"1m\"\nbatch_processor_queue_size = 50\n\n[apim.gateway_notification.registration]\nmax_retry_count = 5\nretry_duration = \"10s\"\nretry_progression_factor = 2\n\n[apim.gateway_notification.cleanup]\nexpiry_time = \"2m\"\ndata_retention_period = \"30d\"\n"
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-conf-entrypoint.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2023, WSO2 LLC. All Rights Reserved.
+#
+# -------------------------------------------------------------------------------------
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: apim-wso2am-all-in-one-conf-entrypoint
+data:
+  docker-entrypoint.sh: |
+    #!/bin/bash
+    set -e
+
+    # WSO2 runtime directories
+    WORKING_DIRECTORY="${WORKING_DIRECTORY:-/home/wso2carbon}"
+    WSO2_SERVER_HOME="${WSO2_SERVER_HOME:-/home/wso2carbon/wso2am-4.7.0}"
+
+    # volume mounts
+    config_volume=${WORKING_DIRECTORY}/wso2-config-volume
+    artifact_volume=${WORKING_DIRECTORY}/wso2-artifact-volume
+
+    # check if the WSO2 non-root user home exists
+    test ! -d "${WORKING_DIRECTORY}" && echo "WSO2 Docker non-root user home does not exist" && exit 1
+
+    # check if the WSO2 product home exists
+    test ! -d "${WSO2_SERVER_HOME}" && echo "WSO2 Docker product home does not exist" && exit 1
+
+    # Force the Helm-generated deployment.toml to be active
+    if test -f "${config_volume}/repository/conf/deployment.toml"; then
+      echo "Using Helm-generated deployment.toml"
+      cp -f "${config_volume}/repository/conf/deployment.toml" \
+        "${WSO2_SERVER_HOME}/repository/conf/deployment.toml"
+    fi
+
+    # Force the Helm-generated log4j2.properties to be active
+    if test -f "${config_volume}/repository/conf/log4j2.properties"; then
+      echo "Using Helm-generated log4j2.properties"
+      cp -f "${config_volume}/repository/conf/log4j2.properties" \
+        "${WSO2_SERVER_HOME}/repository/conf/log4j2.properties"
+    fi
+
+    # copy artifact changes mounted to artifact_volume
+    if test -d "${artifact_volume}" && [[ "$(ls -A "${artifact_volume}")" ]]; then
+      cp -RL "${artifact_volume}/." "${WSO2_SERVER_HOME}/"
+    fi
+
+    # start WSO2 Carbon server
+    sh "${WSO2_SERVER_HOME}/bin/api-manager.sh" "$@"
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-conf-log4j2.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: apim-wso2am-all-in-one-conf-log4j2
+  namespace : apim
+data:
+  log4j2.properties: "# list of all appenders\n#add entry \"syslog\" to use the syslog appender\nappenders = CARBON_CONSOLE, HTTP_ACCESS_CONSOLE, AUDIT_CONSOLE, TRANSACTION_CONSOLE, CORRELATION_CONSOLE, CARBON_LOGFILE, AUDIT_LOGFILE, ATOMIKOS_LOGFILE, CARBON_TRACE_LOGFILE, ERROR_LOGFILE, OPEN_TRACING,SERVICE_APPENDER, TRACE_APPENDER, osgi, CORRELATION, BOTDATA_APPENDER, API_LOGFILE, APIM_GOV_AUDIT_LOGFILE\n\n# CARBON_CONSOLE is set to be a ConsoleAppender using a PatternLayout.\nappender.CARBON_CONSOLE.type = Console\nappender.CARBON_CONSOLE.name = CARBON_CONSOLE\nappender.CARBON_CONSOLE.layout.type = PatternLayout\nappender.CARBON_CONSOLE.layout.pattern = TID: [%X{tenantId}] Tenant: [%X{tenantDomain}] [%d] [%X{Correlation-ID}] : apim : %5p {%c} - %replace{%mm}{\\n}{|}%xThrowable{separator(|)}%n\nappender.CARBON_CONSOLE.filter.threshold.type = ThresholdFilter\nappender.CARBON_CONSOLE.filter.threshold.level = DEBUG\n\nappender.HTTP_ACCESS_CONSOLE.type = Console\nappender.HTTP_ACCESS_CONSOLE.name = HTTP_ACCESS_CONSOLE\nappender.HTTP_ACCESS_CONSOLE.layout.type = PatternLayout\nappender.HTTP_ACCESS_CONSOLE.layout.pattern =  apim-access [%X{Correlation-ID}] %mm%n\nappender.HTTP_ACCESS_CONSOLE.filter.threshold.type = ThresholdFilter\nappender.HTTP_ACCESS_CONSOLE.filter.threshold.level = INFO\n\n# AUDIT_CONSOLE is set to be a ConsoleAppender using a PatternLayout.\nappender.AUDIT_CONSOLE.type = Console\nappender.AUDIT_CONSOLE.name = AUDIT_CONSOLE\nappender.AUDIT_CONSOLE.layout.type = PatternLayout\nappender.AUDIT_CONSOLE.layout.pattern =  TID: [%X{tenantId}] Tenant: [%X{tenantDomain}] [%d] [%X{Correlation-ID}] : apim-audit : %5p {%c} - %replace{%mm}{\\n}{|}%xThrowable{separator(|)}%n\nappender.AUDIT_CONSOLE.filter.threshold.type = ThresholdFilter\nappender.AUDIT_CONSOLE.filter.threshold.level = DEBUG\n\n# TRANSACTION_CONSOLE is set to be a ConsoleAppender using a PatternLayout.\nappender.TRANSACTION_CONSOLE.type = Console\nappender.TRANSACTION_CONSOLE.name = TRANSACTION_CONSOLE\nappender.TRANSACTION_CONSOLE.layout.type = PatternLayout\nappender.TRANSACTION_CONSOLE.layout.pattern =  TID: [%X{tenantId}] [%d] [%X{Correlation-ID}] : apim-transaction : {%c} - %mm %n\nappender.TRANSACTION_CONSOLE.filter.threshold.type = ThresholdFilter\nappender.TRANSACTION_CONSOLE.filter.threshold.level = DEBUG\n\n# CORRELATION_CONSOLE is set to be a ConsoleAppender using a PatternLayout.\nappender.CORRELATION_CONSOLE.type = Console\nappender.CORRELATION_CONSOLE.name = CORRELATION_CONSOLE\nappender.CORRELATION_CONSOLE.layout.type = PatternLayout\nappender.CORRELATION_CONSOLE.layout.pattern =  %d{yyyy-MM-dd HH:mm:ss,SSS}|%X{Correlation-ID} : apim-correlation : |%t|%mm%n\nappender.CORRELATION_CONSOLE.filter.threshold.type = ThresholdFilter\nappender.CORRELATION_CONSOLE.filter.threshold.level = DEBUG\n\n# CARBON_LOGFILE is set to be a DailyRollingFileAppender using a PatternLayout.\nappender.CARBON_LOGFILE.type = RollingFile\nappender.CARBON_LOGFILE.name = CARBON_LOGFILE\nappender.CARBON_LOGFILE.fileName = ${sys:carbon.home}/repository/logs/wso2carbon.log\nappender.CARBON_LOGFILE.filePattern = ${sys:carbon.home}/repository/logs/wso2carbon-%d{MM-dd-yyyy}-%i.log.gz\nappender.CARBON_LOGFILE.layout.type = PatternLayout\nappender.CARBON_LOGFILE.layout.pattern = TID: [%tenantId] [%appName] [%d] %5p {%c} - %m%ex%n\nappender.CARBON_LOGFILE.policies.type = Policies\nappender.CARBON_LOGFILE.policies.time.type = TimeBasedTriggeringPolicy\nappender.CARBON_LOGFILE.policies.time.interval = 1\nappender.CARBON_LOGFILE.policies.time.modulate = true\nappender.CARBON_LOGFILE.policies.size.type = SizeBasedTriggeringPolicy\nappender.CARBON_LOGFILE.policies.size.size=1GB\nappender.CARBON_LOGFILE.strategy.type = DefaultRolloverStrategy\nappender.CARBON_LOGFILE.strategy.max = 20\nappender.CARBON_LOGFILE.filter.threshold.type = ThresholdFilter\nappender.CARBON_LOGFILE.filter.threshold.level = DEBUG\n\nappender.CARBON_LOGFILE.strategy.action.type = Delete\nappender.CARBON_LOGFILE.strategy.action.basepath = ${sys:carbon.home}/repository/logs/\nappender.CARBON_LOGFILE.strategy.action.maxdepth = 1\nappender.CARBON_LOGFILE.strategy.action.condition.type = IfLastModified\nappender.CARBON_LOGFILE.strategy.action.condition.age = 14D\nappender.CARBON_LOGFILE.strategy.action.PathConditions.type = IfFileName\nappender.CARBON_LOGFILE.strategy.action.PathConditions.glob = wso2carbon-*\n\n# Appender config API logging\nappender.API_LOGFILE.type = RollingFile\nappender.API_LOGFILE.name = API_LOGFILE\nappender.API_LOGFILE.fileName = ${sys:carbon.home}/repository/logs/api.log\nappender.API_LOGFILE.filePattern = ${sys:carbon.home}/repository/logs/api-%d{MM-dd-yyyy}-%i.log\nappender.API_LOGFILE.layout.type = PatternLayout\nappender.API_LOGFILE.layout.pattern = [%d] %5p {%c} %X{apiName} - %m%ex%n\nappender.API_LOGFILE.policies.type = Policies\nappender.API_LOGFILE.policies.time.type = TimeBasedTriggeringPolicy\nappender.API_LOGFILE.policies.time.interval = 1\nappender.API_LOGFILE.policies.time.modulate = true\nappender.API_LOGFILE.policies.size.type = SizeBasedTriggeringPolicy\nappender.API_LOGFILE.policies.size.size = 10MB\nappender.API_LOGFILE.strategy.type = DefaultRolloverStrategy\nappender.API_LOGFILE.strategy.max = 20\nappender.API_LOGFILE.filter.threshold.type = ThresholdFilter\nappender.API_LOGFILE.filter.threshold.level = DEBUG\n\n# Appender config to AUDIT_LOGFILE\nappender.AUDIT_LOGFILE.type = RollingFile\nappender.AUDIT_LOGFILE.name = AUDIT_LOGFILE\nappender.AUDIT_LOGFILE.fileName = ${sys:carbon.home}/repository/logs/audit.log\nappender.AUDIT_LOGFILE.filePattern = ${sys:carbon.home}/repository/logs/audit-%d{MM-dd-yyyy}-%i.log\nappender.AUDIT_LOGFILE.layout.type = PatternLayout\nappender.AUDIT_LOGFILE.layout.pattern = TID: [%tenantId] [%d] %5p {%c} - %m%ex%n\nappender.AUDIT_LOGFILE.policies.type = Policies\nappender.AUDIT_LOGFILE.policies.time.type = TimeBasedTriggeringPolicy\nappender.AUDIT_LOGFILE.policies.time.interval = 1\nappender.AUDIT_LOGFILE.policies.time.modulate = true\nappender.AUDIT_LOGFILE.policies.size.type = SizeBasedTriggeringPolicy\nappender.AUDIT_LOGFILE.policies.size.size = 10MB\nappender.AUDIT_LOGFILE.strategy.type = DefaultRolloverStrategy\nappender.AUDIT_LOGFILE.strategy.max = 20\nappender.AUDIT_LOGFILE.filter.threshold.type = ThresholdFilter\nappender.AUDIT_LOGFILE.filter.threshold.level = INFO\n\n# Appender config to send Atomikos transaction logs to new log file tm.out.\nappender.ATOMIKOS_LOGFILE.type = RollingFile\nappender.ATOMIKOS_LOGFILE.name = ATOMIKOS_LOGFILE\nappender.ATOMIKOS_LOGFILE.fileName = ${sys:carbon.home}/repository/logs/tm.out\nappender.ATOMIKOS_LOGFILE.filePattern = ${sys:carbon.home}/repository/logs/tm-%d{MM-dd-yyyy}.out\nappender.ATOMIKOS_LOGFILE.layout.type = PatternLayout\nappender.ATOMIKOS_LOGFILE.layout.pattern = [%d] [%tenantId] %5p {%c} - %m%ex%n\nappender.ATOMIKOS_LOGFILE.policies.type = Policies\nappender.ATOMIKOS_LOGFILE.policies.time.type = TimeBasedTriggeringPolicy\nappender.ATOMIKOS_LOGFILE.policies.time.interval = 1\nappender.ATOMIKOS_LOGFILE.policies.time.modulate = true\nappender.ATOMIKOS_LOGFILE.strategy.type = DefaultRolloverStrategy\nappender.ATOMIKOS_LOGFILE.strategy.max = 20\n\n# Appender config to CARBON_TRACE_LOGFILE\nappender.CARBON_TRACE_LOGFILE.type = RollingFile\nappender.CARBON_TRACE_LOGFILE.name = CARBON_TRACE_LOGFILE\nappender.CARBON_TRACE_LOGFILE.fileName = ${sys:carbon.home}/repository/logs/wso2carbon-trace-messages.log\nappender.CARBON_TRACE_LOGFILE.filePattern = ${sys:carbon.home}/repository/logs/wso2carbon-trace-messages-%d{MM-dd-yyyy}-%i.log\nappender.CARBON_TRACE_LOGFILE.layout.type = PatternLayout\nappender.CARBON_TRACE_LOGFILE.layout.pattern = [%d] [%tenantId] %5p {%c} - %m%ex%n\nappender.CARBON_TRACE_LOGFILE.policies.type = Policies\nappender.CARBON_TRACE_LOGFILE.policies.time.type = TimeBasedTriggeringPolicy\nappender.CARBON_TRACE_LOGFILE.policies.time.interval = 1\nappender.CARBON_TRACE_LOGFILE.policies.time.modulate = true\nappender.CARBON_TRACE_LOGFILE.policies.size.type = SizeBasedTriggeringPolicy\nappender.CARBON_TRACE_LOGFILE.policies.size.size = 10MB\nappender.CARBON_TRACE_LOGFILE.strategy.type = DefaultRolloverStrategy\nappender.CARBON_TRACE_LOGFILE.strategy.max = 20\n\n# Appender config to put correlation Log.\nappender.CORRELATION.type = RollingFile\nappender.CORRELATION.name = CORRELATION\nappender.CORRELATION.fileName = ${sys:carbon.home}/repository/logs/correlation.log\nappender.CORRELATION.filePattern =${sys:carbon.home}/repository/logs/correlation-%d{MM-dd-yyyy}-%i.log.gz\nappender.CORRELATION.layout.type = PatternLayout\nappender.CORRELATION.layout.pattern = %d{yyyy-MM-dd HH:mm:ss,SSS}|%X{Correlation-ID}|%t|%m%n\nappender.CORRELATION.policies.type = Policies\nappender.CORRELATION.policies.time.type = TimeBasedTriggeringPolicy\nappender.CORRELATION.policies.time.interval = 1\nappender.CORRELATION.policies.time.modulate = true\nappender.CORRELATION.policies.size.type = SizeBasedTriggeringPolicy\nappender.CORRELATION.policies.size.size = 10MB\nappender.CORRELATION.strategy.type = DefaultRolloverStrategy\nappender.CORRELATION.strategy.max = 20\nappender.CORRELATION.filter.threshold.type = ThresholdFilter\nappender.CORRELATION.filter.threshold.level = INFO\n\nappender.ERROR_LOGFILE.type = RollingFile\nappender.ERROR_LOGFILE.name = ERROR_LOGFILE\nappender.ERROR_LOGFILE.fileName = ${sys:carbon.home}/repository/logs/wso2-apigw-errors.log\nappender.ERROR_LOGFILE.filePattern = ${sys:carbon.home}/repository/logs/wso2-apigw-errors-%d{MM-dd-yyyy}-%i.log.gz\nappender.ERROR_LOGFILE.layout.type = PatternLayout\nappender.ERROR_LOGFILE.layout.pattern = %d{ISO8601} [%X{ip}-%X{host}] [%t] %5p %c{1} %m%n\nappender.ERROR_LOGFILE.policies.type = Policies\nappender.ERROR_LOGFILE.policies.time.type = TimeBasedTriggeringPolicy\nappender.ERROR_LOGFILE.policies.time.interval = 1\nappender.ERROR_LOGFILE.policies.time.modulate = true\nappender.ERROR_LOGFILE.policies.size.type = SizeBasedTriggeringPolicy\nappender.ERROR_LOGFILE.policies.size.size = 10MB\nappender.ERROR_LOGFILE.strategy.type = DefaultRolloverStrategy\nappender.ERROR_LOGFILE.strategy.max = 20\nappender.ERROR_LOGFILE.filter.threshold.type = ThresholdFilter\nappender.ERROR_LOGFILE.filter.threshold.level = WARN\n\n# appender.CARBON_SYS_LOG.type = Syslog\n# appender.CARBON_SYS_LOG.name = CARBON_SYS_LOG\n# appender.CARBON_SYS_LOG.host = localhost\n# appender.CARBON_SYS_LOG.facility = USER\n# appender.CARBON_SYS_LOG.layout.type = PatternLayout\n# appender.CARBON_SYS_LOG.layout.pattern = [%d] %5p - %x %m {%c}%n\n# appender.CARBON_SYS_LOG.filter.threshold.type = ThresholdFilter\n# appender.CARBON_SYS_LOG.filter.threshold.level = DEBUG\n\nappender.OPEN_TRACING.type = RollingFile\nappender.OPEN_TRACING.name = OPEN_TRACING\nappender.OPEN_TRACING.fileName = ${sys:carbon.home}/repository/logs/wso2-apimgt-open-tracing.log\nappender.OPEN_TRACING.filePattern = ${sys:carbon.home}/repository/logs/wso2-apimgt-open-tracing-%d{MM-dd-yyyy}-%i.log.gz\nappender.OPEN_TRACING.layout.type = PatternLayout\nappender.OPEN_TRACING.layout.pattern = %d{HH:mm:ss,SSS} [%X{ip}-%X{host}] [%t] %5p %m%nn\nappender.OPEN_TRACING.policies.type = Policies\nappender.OPEN_TRACING.policies.time.type = TimeBasedTriggeringPolicy\nappender.OPEN_TRACING.policies.time.interval = 1\nappender.OPEN_TRACING.policies.time.modulate = true\nappender.OPEN_TRACING.policies.size.type = SizeBasedTriggeringPolicy\nappender.OPEN_TRACING.policies.size.size = 10MB\nappender.OPEN_TRACING.strategy.type = DefaultRolloverStrategy\nappender.OPEN_TRACING.strategy.max = 20\nappender.OPEN_TRACING.filter.threshold.type = ThresholdFilter\nappender.OPEN_TRACING.filter.threshold.level = TRACE\n\nappender.TRACE_APPENDER.type = RollingFile\nappender.TRACE_APPENDER.name = TRACE_APPENDER\nappender.TRACE_APPENDER.fileName = ${sys:carbon.home}/repository/logs/wso2-apigw-trace.log\nappender.TRACE_APPENDER.filePattern = ${sys:carbon.home}/repository/logs/wso2-apigw-trace-%d{MM-dd-yyyy}.log\nappender.TRACE_APPENDER.layout.type = PatternLayout\nappender.TRACE_APPENDER.layout.pattern = %d{HH:mm:ss,SSS} [%X{ip}-%X{host}] [%t] %5p %c{1} %m%n\nappender.TRACE_APPENDER.policies.type = Policies\nappender.TRACE_APPENDER.policies.time.type = TimeBasedTriggeringPolicy\nappender.TRACE_APPENDER.policies.time.interval = 1\nappender.TRACE_APPENDER.policies.time.modulate = true\nappender.TRACE_APPENDER.strategy.type = DefaultRolloverStrategy\nappender.TRACE_APPENDER.strategy.max = 20\n\nappender.SERVICE_APPENDER.type = RollingFile\nappender.SERVICE_APPENDER.name = SERVICE_APPENDER\nappender.SERVICE_APPENDER.fileName = ${sys:carbon.home}/repository/logs/wso2-apigw-service.log\nappender.SERVICE_APPENDER.filePattern = ${sys:carbon.home}/repository/logs/wso2-apigw-service-%i.log\nappender.SERVICE_APPENDER.layout.type = PatternLayout\nappender.SERVICE_APPENDER.layout.pattern = %d{ISO8601} [%X{ip}-%X{host}] [%t] %5p %c{1} %m%n\nappender.SERVICE_APPENDER.policies.type = Policies\nappender.SERVICE_APPENDER.policies.size.type = SizeBasedTriggeringPolicy\nappender.SERVICE_APPENDER.policies.size.size=1000KB\nappender.SERVICE_APPENDER.strategy.type = DefaultRolloverStrategy\nappender.SERVICE_APPENDER.strategy.max = 10\n\nappender.osgi.type = PaxOsgi\nappender.osgi.name = PaxOsgi\nappender.osgi.filter = *\n\n# Appender config to APIM_GOV_AUDIT_LOGFILE\nappender.APIM_GOV_AUDIT_LOGFILE.type = RollingFile\nappender.APIM_GOV_AUDIT_LOGFILE.name = APIM_GOV_AUDIT_LOGFILE\nappender.APIM_GOV_AUDIT_LOGFILE.fileName = ${sys:carbon.home}/repository/logs/apim_governance_audit.log\nappender.APIM_GOV_AUDIT_LOGFILE.filePattern = ${sys:carbon.home}/repository/logs/apim_governance_audit-%d{MM-dd-yyyy}.log\nappender.APIM_GOV_AUDIT_LOGFILE.layout.type = PatternLayout\nappender.APIM_GOV_AUDIT_LOGFILE.layout.pattern = ThreadID: [%T] TenantID: [%tenantId] [%d] %5p {%c} - %m%ex%n\nappender.APIM_GOV_AUDIT_LOGFILE.policies.type = Policies\nappender.APIM_GOV_AUDIT_LOGFILE.policies.time.type = TimeBasedTriggeringPolicy\nappender.APIM_GOV_AUDIT_LOGFILE.policies.time.interval = 1\nappender.APIM_GOV_AUDIT_LOGFILE.policies.time.modulate = true\nappender.APIM_GOV_AUDIT_LOGFILE.policies.size.type = SizeBasedTriggeringPolicy\nappender.APIM_GOV_AUDIT_LOGFILE.policies.size.size = 10MB\nappender.APIM_GOV_AUDIT_LOGFILE.strategy.type = DefaultRolloverStrategy\nappender.APIM_GOV_AUDIT_LOGFILE.strategy.max = 20\nappender.APIM_GOV_AUDIT_LOGFILE.filter.threshold.type = ThresholdFilter\nappender.APIM_GOV_AUDIT_LOGFILE.filter.threshold.level = INFO\n\nloggers = AUDIT_LOG, trace-messages, org-apache-coyote, com-hazelcast, Owasp-CsrfGuard, org-apache-axis2-wsdl-codegen-writer-PrettyPrinter, org-apache-axis2-clustering, org-apache-catalina, org-apache-tomcat, org-wso2-carbon-apacheds, org-apache-directory-server-ldap, org-apache-directory-server-core-event, com-atomikos, org-quartz, org-apache-jackrabbit-webdav, org-apache-juddi, org-apache-commons-digester-Digester, org-apache-jasper-compiler-TldLocationsCache, org-apache-qpid, org-apache-qpid-server-Main, qpid-message, qpid-message-broker-listening, org-apache-tiles, org-apache-commons-httpclient, org-apache-solr, me-prettyprint-cassandra-hector-TimingLogger, org-apache-axis-enterprise, org-apache-directory-shared-ldap, org-apache-directory-server-ldap-handlers, org-apache-directory-shared-ldap-entry-DefaultServerAttribute, org-apache-directory-server-core-DefaultDirectoryService, org-apache-directory-shared-ldap-ldif-LdifReader, org-apache-directory-server-ldap-LdapProtocolHandler, org-apache-directory-server-core, org-apache-directory-server-ldap-LdapSession, DataNucleus, Datastore, Datastore-Schema, JPOX-Datastore, JPOX-Plugin, JPOX-MetaData, JPOX-Query, JPOX-General, JPOX-Enhancer, org-apache-hadoop-hive, hive, ExecMapper, ExecReducer, net-sf-ehcache-config-ConfigurationFactory, axis2Deployment, equinox, tomcat2, StAXDialectDetector, trace, synapse, synapse_transport, axis2, axis2_transport, org-wso2-carbon, hunsicker, thrift-publisher, service_logger, trace_logger, org-wso2-carbon-apimgt-gateway-mediators-BotDetectionMediator, correlation\n\n# logger.API_LOG.name = API_LOG\n# logger.API_LOG.level = INFO\n# logger.API_LOG.appenderRef.API_LOGFILE.ref = API_LOGFILE\n# logger.API_LOG.additivity = false\n\nlogger.AUDIT_LOG.name = AUDIT_LOG\nlogger.AUDIT_LOG.level = INFO\nlogger.AUDIT_LOG.appenderRef.AUDIT_LOGFILE.ref = AUDIT_LOGFILE\nlogger.AUDIT_LOG.additivity = false\n\n# logger.AUDIT_LOG_CONSOLE.name = AUDIT_LOG_CONSOLE\n# logger.AUDIT_LOG_CONSOLE.level = INFO\n# logger.AUDIT_LOG_CONSOLE.appenderRef.AUDIT_CONSOLE.ref = AUDIT_CONSOLE\n# logger.AUDIT_LOG_CONSOLE.additivity = false\n\n# logger.HTTP_ACCESS_CONSOLE.name = HTTP_ACCESS_CONSOLE\n# logger.HTTP_ACCESS_CONSOLE.level = INFO\n# logger.HTTP_ACCESS_CONSOLE.appenderRef.HTTP_ACCESS_CONSOLE.ref = HTTP_ACCESS_CONSOLE\n# logger.HTTP_ACCESS_CONSOLE.additivity = false\n\n# logger.TRANSACTION_CONSOLE.name = TRANSACTION_CONSOLE\n# logger.TRANSACTION_CONSOLE.level = INFO\n# logger.TRANSACTION_CONSOLE.appenderRef.TRANSACTION_CONSOLE.ref = TRANSACTION_CONSOLE\n# logger.TRANSACTION_CONSOLE.additivity = false\n\n# logger.CORRELATION_CONSOLE.name = CORRELATION_CONSOLE\n# logger.CORRELATION_CONSOLE.level = INFO\n# logger.CORRELATION_CONSOLE.appenderRef.CORRELATION_CONSOLE.ref = CORRELATION_CONSOLE\n# logger.CORRELATION_CONSOLE.additivity = false\n\nlogger.trace-messages.name = trace.messages\nlogger.trace-messages.level = TRACE\nlogger.trace-messages.appenderRef.CARBON_TRACE_LOGFILE.ref = CARBON_TRACE_LOGFILE\n\nlogger.org-apache-coyote.name = org.apache.coyote\nlogger.org-apache-coyote.level = WARN\n\nlogger.com-hazelcast.name = com.hazelcast\nlogger.com-hazelcast.level = ERROR\n\nlogger.Owasp-CsrfGuard.name = Owasp.CsrfGuard\nlogger.Owasp-CsrfGuard.level = WARN\n\nlogger.org-apache-axis2-wsdl-codegen-writer-PrettyPrinter.name = org.apache.axis2.wsdl.codegen.writer.PrettyPrinter\nlogger.org-apache-axis2-wsdl-codegen-writer-PrettyPrinter.level = ERROR\nlogger.org-apache-axis2-wsdl-codegen-writer-PrettyPrinter.appenderRef.CARBON_LOGFILE.ref = CARBON_LOGFILE\n\nlogger.org-apache-axis2-clustering.name = org.apache.axis2.clustering\nlogger.org-apache-axis2-clustering.level = INFO\nlogger.org-apache-axis2-clustering.additivity = false\n\n# logger.org-apache.name = org.apache\n# logger.org-apache.level = INFO\n# logger.org-apache.additivity = false\n# logger.org-apache.appenderRef.CARBON_LOGFILE.ref = CARBON_LOGFILE\n\nlogger.org-apache-catalina.name = org.apache.catalina\nlogger.org-apache-catalina.level = ERROR\n\nlogger.org-apache-tomcat.name = org.apache.tomcat\nlogger.org-apache-tomcat.level = INFO\n\nlogger.org-wso2-carbon-apacheds.name = org.wso2.carbon.apacheds\nlogger.org-wso2-carbon-apacheds.level = WARN\n\nlogger.org-apache-directory-server-ldap.name = org.apache.directory.server.ldap\nlogger.org-apache-directory-server-ldap.level = ERROR\n\nlogger.org-apache-directory-server-core-event.name = org.apache.directory.server.core.event\nlogger.org-apache-directory-server-core-event.level = WARN\n\nlogger.com-atomikos.name = com.atomikos\nlogger.com-atomikos.level = INFO\nlogger.com-atomikos.additivity = false\nlogger.com-atomikos.appenderRef.ATOMIKOS_LOGFILE.ref = ATOMIKOS_LOGFILE\n\nlogger.org-quartz.name = org.quartz\nlogger.org-quartz.level = WARN\n\nlogger.org-apache-jackrabbit-webdav.name = org.apache.jackrabbit.webdav\nlogger.org-apache-jackrabbit-webdav.level = WARN\n\nlogger.org-apache-juddi.name = org.apache.juddi\nlogger.org-apache-juddi.level = ERROR\n\nlogger.org-apache-commons-digester-Digester.name = org.apache.commons.digester.Digester\nlogger.org-apache-commons-digester-Digester.level = WARN\n\nlogger.org-apache-jasper-compiler-TldLocationsCache.name = org.apache.jasper.compiler.TldLocationsCache\nlogger.org-apache-jasper-compiler-TldLocationsCache.level = WARN\n\nlogger.org-apache-qpid.name = org.apache.qpid\nlogger.org-apache-qpid.level = WARN\n\nlogger.org-apache-qpid-server-Main.name = org.apache.qpid.server.Main\nlogger.org-apache-qpid-server-Main.level = INFO\n\nlogger.qpid-message.name = qpid.message\nlogger.qpid-message.level = WARN\n\nlogger.qpid-message-broker-listening.name = qpid.message.broker.listening\nlogger.qpid-message-broker-listening.level = INFO\n\nlogger.org-apache-tiles.name = org.apache.tiles\nlogger.org-apache-tiles.level = WARN\n\nlogger.org-apache-commons-httpclient.name = org.apache.commons.httpclient\nlogger.org-apache-commons-httpclient.level = ERROR\n\nlogger.org-apache-solr.name = org.apache.solr\nlogger.org-apache-solr.level = ERROR\n\nlogger.me-prettyprint-cassandra-hector-TimingLogger.name = me.prettyprint.cassandra.hector.TimingLogger\nlogger.me-prettyprint-cassandra-hector-TimingLogger.level = ERROR\n\n# logger.org-wso2.name = org.wso2\n# logger.org-wso2.level = INFO\n\nlogger.org-wso2-carbon.name = org.wso2.carbon\nlogger.org-wso2-carbon.level = INFO\n\nlogger.org-apache-axis-enterprise.name = org.apache.axis2.enterprise\nlogger.org-apache-axis-enterprise.level = FATAL\nlogger.org-apache-axis-enterprise.appenderRef.CARBON_LOGFILE.ref = CARBON_LOGFILE\n\nlogger.org-apache-directory-shared-ldap.name = org.apache.directory.shared.ldap\nlogger.org-apache-directory-shared-ldap.level = WARN\nlogger.org-apache-directory-shared-ldap.appenderRef.CARBON_LOGFILE.ref = CARBON_LOGFILE\n\nlogger.org-apache-directory-server-ldap-handlers.name = org.apache.directory.server.ldap.handlers\nlogger.org-apache-directory-server-ldap-handlers.level = WARN\nlogger.org-apache-directory-server-ldap-handlers.appenderRef.CARBON_LOGFILE.ref = CARBON_LOGFILE\n\n# Following are to remove false error messages from startup (IS)\nlogger.org-apache-directory-shared-ldap-entry-DefaultServerAttribute.name = org.apache.directory.shared.ldap.entry.DefaultServerAttribute\nlogger.org-apache-directory-shared-ldap-entry-DefaultServerAttribute.level = FATAL\nlogger.org-apache-directory-shared-ldap-entry-DefaultServerAttribute.appenderRef.CARBON_LOGFILE.ref = CARBON_LOGFILE\n\nlogger.org-apache-directory-server-core-DefaultDirectoryService.name = org.apache.directory.server.core.DefaultDirectoryService\nlogger.org-apache-directory-server-core-DefaultDirectoryService.level = ERROR\nlogger.org-apache-directory-server-core-DefaultDirectoryService.appenderRef.CARBON_LOGFILE.ref = CARBON_LOGFILE\n\nlogger.org-apache-directory-shared-ldap-ldif-LdifReader.name = org.apache.directory.shared.ldap.ldif.LdifReader\nlogger.org-apache-directory-shared-ldap-ldif-LdifReader.level = ERROR\nlogger.org-apache-directory-shared-ldap-ldif-LdifReader.appenderRef.CARBON_LOGFILE.ref = CARBON_LOGFILE\n\nlogger.org-apache-directory-server-ldap-LdapProtocolHandler.name = org.apache.directory.server.ldap.LdapProtocolHandler\nlogger.org-apache-directory-server-ldap-LdapProtocolHandler.level = ERROR\nlogger.org-apache-directory-server-ldap-LdapProtocolHandler.appenderRef.CARBON_LOGFILE.ref = CARBON_LOGFILE\n\nlogger.org-apache-directory-server-core.name = org.apache.directory.server.core\nlogger.org-apache-directory-server-core.level = ERROR\nlogger.org-apache-directory-server-core.appenderRef.CARBON_LOGFILE.ref = CARBON_LOGFILE\n\nlogger.org-apache-directory-server-ldap-LdapSession.name = org.apache.directory.server.ldap.LdapSession\nlogger.org-apache-directory-server-ldap-LdapSession.level = Error\nlogger.org-apache-directory-server-ldap-LdapSession.appenderRef.CARBON_LOGFILE.ref = CARBON_LOGFILE\n\nlogger.correlation.name = correlation\nlogger.correlation.level = INFO\nlogger.correlation.appenderRef.CORRELATION.ref = CORRELATION\nlogger.correlation.additivity = false\n\n# Hive Related Log configurations\nlogger.DataNucleus.name = DataNucleus\nlogger.DataNucleus.level = ERROR\n\nlogger.Datastore.name = Datastore\nlogger.Datastore.level = ERROR\n\nlogger.Datastore-Schema.name = Datastore.Schema\nlogger.Datastore-Schema.level = ERROR\n\nlogger.JPOX-Datastore.name = JPOX.Datastore\nlogger.JPOX-Datastore.level = ERROR\n\nlogger.JPOX-Plugin.name = JPOX.Plugin\nlogger.JPOX-Plugin.level = ERROR\n\nlogger.JPOX-MetaData.name = JPOX.MetaData\nlogger.JPOX-MetaData.level = ERROR\n\nlogger.JPOX-Query.name = JPOX.Query\nlogger.JPOX-Query.level = ERROR\n\nlogger.JPOX-General.name = JPOX.General\nlogger.JPOX-General.level = ERROR\n\nlogger.JPOX-Enhancer.name = JPOX.Enhancer\nlogger.JPOX-Enhancer.level = ERROR\n\nlogger.org-apache-hadoop-hive.name = org.apache.hadoop.hive\nlogger.org-apache-hadoop-hive.level = WARN\n\nlogger.hive.name = hive\nlogger.hive.level = WARN\n\nlogger.ExecMapper.name = ExecMapper\nlogger.ExecMapper.level = WARN\n\nlogger.ExecReducer.name = ExecReducer\nlogger.ExecReducer.level = WARN\n\nlogger.net-sf-ehcache-config-ConfigurationFactory.name = net.sf.ehcache.config.ConfigurationFactory\nlogger.net-sf-ehcache-config-ConfigurationFactory.level = ERROR\n\nlogger.axis2Deployment.name = org.apache.axis2.deployment\nlogger.axis2Deployment.level = WARN\n\nlogger.equinox.name = org.eclipse.equinox\nlogger.equinox.level = FATAL\n\nlogger.tomcat2.name = tomcat\nlogger.tomcat2.level = FATAL\n\nlogger.StAXDialectDetector.name = org.apache.axiom.util.stax.dialect.StAXDialectDetector\nlogger.StAXDialectDetector.level = ERROR\n\nlogger.trace.name = tracer\nlogger.trace.level = TRACE\nlogger.trace.appenderRef.OPEN_TRACING.ref = OPEN_TRACING\n\nlogger.synapse.name = org.apache.synapse\nlogger.synapse.level = INFO\n\nlogger.synapse_transport.name = org.apache.synapse.transport\nlogger.synapse_transport.level = INFO\n\nlogger.axis2.name = org.apache.axis2\nlogger.axis2.level = INFO\n\nlogger.axis2_transport.name = org.apache.axis2.transport\nlogger.axis2_transport.level = INFO\n\nlogger.hunsicker.name = de.hunsicker.jalopy.io\nlogger.hunsicker.level = FATAL\n\n# logger.synapse-headers.name = org.apache.synapse.transport.http.headers\n# logger.synapse-headers.level = DEBUG\n\n# logger.synapse-wire.name = org.apache.synapse.transport.http.wire\n# logger.synapse-wire.level = DEBUG\n\nlogger.thrift-publisher.name = org.wso2.carbon.databridge.agent.thrift.AsyncDataPublisher\nlogger.thrift-publisher.level = WARN\n\nlogger.service_logger.name = SERVICE_LOGGER\nlogger.service_logger.level = INFO\nlogger.service_logger.additivity = false\nlogger.service_logger.appenderRef.SERVICE_APPENDER.ref = SERVICE_APPENDER\n\n# logger.wso2-callhome.name = org.wso2.callhome\n# logger.wso2-callhome.level = INFO\n\nlogger.trace_logger.name = TRACE_LOGGER\nlogger.trace_logger.level = INFO\nlogger.trace_logger.appenderRef.TRACE_APPENDER.ref = TRACE_APPENDER\n\n# root loggers\nrootLogger.level = ERROR\nrootLogger.appenderRef.CARBON_CONSOLE.ref = CARBON_CONSOLE\nrootLogger.appenderRef.CARBON_LOGFILE.ref = CARBON_LOGFILE\nrootLogger.appenderRef.ERROR_LOGFILE.ref = ERROR_LOGFILE\nrootLogger.appenderRef.PaxOsgi.ref = PaxOsgi\n#rootLogger.appenderReg.CARBON_SYS_LOG.ref = CARBON_SYS_LOG\n#rootLogger.appenderRef.syslog.ref = syslog\n\n# bot detection feature appender\nappender.BOTDATA_APPENDER.type = RollingFile\nappender.BOTDATA_APPENDER.name = BOTDATA_APPENDER\nappender.BOTDATA_APPENDER.fileName = ${sys:carbon.home}/repository/logs/wso2-BotDetectedData.log\nappender.BOTDATA_APPENDER.filePattern = ${sys:carbon.home}/repository/logs/wso2-BotDetectedData-%d{MM-dd-yyyy}-%i.log\nappender.BOTDATA_APPENDER.layout.type = PatternLayout\nappender.BOTDATA_APPENDER.layout.pattern = [%d] [%tenantId] %5p {%c} - %m%ex%n\nappender.BOTDATA_APPENDER.policies.type = Policies\nappender.BOTDATA_APPENDER.policies.time.type = TimeBasedTriggeringPolicy\nappender.BOTDATA_APPENDER.policies.time.interval = 1\nappender.BOTDATA_APPENDER.policies.time.modulate = true\nappender.BOTDATA_APPENDER.policies.size.type = SizeBasedTriggeringPolicy\nappender.BOTDATA_APPENDER.policies.size.size = 10MB\nappender.BOTDATA_APPENDER.strategy.type = DefaultRolloverStrategy\nappender.BOTDATA_APPENDER.strategy.max = 20\n\nlogger.org-wso2-carbon-apimgt-gateway-mediators-BotDetectionMediator.name = org.wso2.carbon.apimgt.gateway.mediators.BotDetectionMediator\nlogger.org-wso2-carbon-apimgt-gateway-mediators-BotDetectionMediator.level = INFO\nlogger.org-wso2-carbon-apimgt-gateway-mediators-BotDetectionMediator.appenderRef.BOTDATA_APPENDER.ref = BOTDATA_APPENDER\nlogger.org-wso2-carbon-apimgt-gateway-mediators-BotDetectionMediator.additivity = false\n\n# category.SERVICE_APPENDER._OpenService_ = TRACE_APPENDER, BOTDATA_APPENDER\n"
+---
+# Source: wso2am-all-in-one/templates/am/instance-1/wso2am-service.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: apim-wso2am-all-in-one-am-service-1
+  namespace : apim
+spec:
+  # label keys and values that must match in order to receive traffic for this service
+  selector:
+    deployment: apim-wso2am-all-in-one-am
+    node: apim-wso2am-all-in-one-am-1
+  ports:
+    # ports that this service should serve on
+    - name: pass-through-http
+      protocol: TCP
+      port: 8280
+    - name: pass-through-https
+      protocol: TCP
+      port: 8243
+    - name: binary
+      protocol: TCP
+      port: 9611
+    - name: binary-secure
+      protocol: TCP
+      port: 9711
+    - name: jms-tcp
+      protocol: TCP
+      port: 5672
+    - name: servlet-https
+      protocol: TCP
+      port: 9443
+    - name: websub-http
+      protocol: TCP
+      port: 9021
+    - name: websub-https
+      protocol: TCP
+      port: 8021
+    - name: websocket-https
+      protocol: TCP
+      port: 8099
+    - name: websocket-http
+      protocol: TCP
+      port: 9099
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-service.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: apim-wso2am-all-in-one-am-service
+  namespace : apim
+spec:
+  # label keys and values that must match in order to receive traffic for this service
+  selector:
+    deployment: apim-wso2am-all-in-one-am
+  ports:
+    # ports that this service should serve on
+    - name: pass-through-http
+      protocol: TCP
+      port: 8280
+    - name: pass-through-https
+      protocol: TCP
+      port: 8243
+    - name: binary
+      protocol: TCP
+      port: 9611
+    - name: binary-secure
+      protocol: TCP
+      port: 9711
+    - name: jms-tcp
+      protocol: TCP
+      port: 5672
+    - name: servlet-https
+      protocol: TCP
+      port: 9443
+    - name: websub-http
+      protocol: TCP
+      port: 9021
+    - name: websub-https
+      protocol: TCP
+      port: 8021
+    - name: websocket-https
+      protocol: TCP
+      port: 8099
+    - name: websocket-http
+      protocol: TCP
+      port: 9099
+---
+# Source: wso2am-all-in-one/templates/am/instance-1/wso2am-deployment.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apim-wso2am-all-in-one-am-deployment-1
+  namespace: apim
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      deployment: apim-wso2am-all-in-one-am
+      node: apim-wso2am-all-in-one-am-1
+  template:
+    metadata:
+      annotations:
+        checksum.am.conf: 5d274fcd11939e5054082d3af8a983d59f7a0bea591c6eef47715e6b5e101efe
+        checksum.am.conf.log4j2: fa21dfd411e20e2311259f13dd2816dc268a8fdc84b1acb133e3dfc239657e5b
+        checksum.am.conf.secret-conf: 6931efed2d9b235c16cb2483d011065a68d48e84e9adb262621f41a66645fbfb
+      labels:
+        deployment: apim-wso2am-all-in-one-am
+        node: apim-wso2am-all-in-one-am-1
+        product: apim
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: deployment
+                  operator: In
+                  values:
+                  - apim-wso2am-all-in-one
+              topologyKey: "topology.kubernetes.io/zone"
+            weight: 100
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+        - name: wait-for-mysql
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              until nc -z mysql-svc.database 3306; do
+                echo "En attente de MySQL...";
+                sleep 3;
+              done
+          securityContext:
+            runAsUser: 10001
+            runAsGroup: 10001
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities:
+              drop: ["ALL"]
+      containers:
+        - name: wso2am
+          command:
+            - /bin/bash
+            - /home/wso2carbon/docker-entrypoint.sh
+          image: docker.io/wso2am:4.7.0-mysql
+
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: JVM_MEM_OPTS
+              value: "-Xms2048m -Xmx2048m"
+            - name: WSO2_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: apim-creds
+                  key:  adminPassword
+            - name: WSO2_ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: apim-creds
+                  key:  encryptionKey
+          startupProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - timeout 1 bash -c "</dev/tcp/localhost/9443"
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /services/Version
+              port: 9763
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /api/am/gateway/v2/server-startup-healthcheck
+              port: 9443
+              scheme: HTTPS
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            failureThreshold: 5
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - "sh"
+                  - "-c"
+                  - >
+                    echo "Pre stop hook triggered";
+                    sleep 10;
+                    echo "Shutdown APIM Server";
+                    ${WSO2_SERVER_HOME}/bin/api-manager.sh stop
+          resources:
+            requests:
+              memory: 2Gi
+              cpu: 2000m
+            limits:
+              memory: 3Gi
+              cpu: 3000m
+          securityContext:
+            runAsUser: 10001
+            runAsGroup: 10001
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities:
+              drop: ["ALL"]
+          ports:
+            - containerPort: 8280
+              protocol: "TCP"
+            - containerPort: 8243
+              protocol: "TCP"
+            - containerPort: 9763
+              protocol: "TCP"
+            - containerPort: 9443
+              protocol: "TCP"
+            - containerPort: 9711
+              protocol: "TCP"
+            - containerPort: 9611
+              protocol: "TCP"
+            - containerPort: 5672
+              protocol: "TCP"
+          volumeMounts:
+            - name: wso2am-conf
+              mountPath: /home/wso2carbon/wso2-config-volume/repository/conf/deployment.toml
+              subPath: deployment.toml
+           # - name: wso2am-entrypoint
+            #  mountPath: /home/wso2carbon/docker-entrypoint.sh
+            #  subPath: docker-entrypoint.sh
+            - name: wso2am-log4j2
+              mountPath: /home/wso2carbon/wso2-config-volume/repository/conf/log4j2.properties
+              subPath: log4j2.properties
+            
+      volumes:
+        - name: wso2am-conf
+          configMap:
+            name: apim-wso2am-all-in-one-am-conf-1
+            defaultMode: 0407
+       # - name: wso2am-entrypoint
+         # configMap:
+          #  name: apim-wso2am-all-in-one-conf-entrypoint
+           # defaultMode: 0407
+        - name: wso2am-log4j2
+          configMap:
+            name: apim-wso2am-all-in-one-conf-log4j2
+            defaultMode: 0407
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-gateway-ingress.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: apim-wso2am-all-in-one-am-gateway-ingress
+  namespace : apim
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 8k
+    nginx.ingress.kubernetes.io/proxy-buffering: "on"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - gw.wso2apim.local
+    secretName: tls-cert
+  rules:
+  - host: gw.wso2apim.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: apim-wso2am-all-in-one-am-service
+            port:
+              number: 8243
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-ingress.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: apim-wso2am-all-in-one-am-ingress
+  namespace : apim
+  annotations:
+    nginx.ingress.kubernetes.io/affinity: cookie
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/session-cookie-hash: sha1
+    nginx.ingress.kubernetes.io/session-cookie-name: route
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - am.wso2apim.local
+    secretName: tls-cert
+  rules:
+  - host: am.wso2apim.local
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: apim-wso2am-all-in-one-am-service
+              port:
+                number: 9443
+---
+# Source: wso2am-all-in-one/templates/am/backend-traffic-policy.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2026, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/am/instance-2/wso2am-conf.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/am/instance-2/wso2am-deployment.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/am/instance-2/wso2am-service.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-ca-cert-configmap.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2026, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-conf-script.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-conf-secret-conf.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-cp-conf-settings.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-gateway-api-backend-tls-policy.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2026, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-gateway-route.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-routes.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-secret-store-provider-gcp.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-storageclass-gcp.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-storageclass.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-volume-aws.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-volume-azure.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-volume-claims-aws.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-volume-claims-azure.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-volume-claims-gcp.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-volume-gcp.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-websocket-ingress.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-websocket-route.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-websub-ingress.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-websub-route.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/secrets/wso2am-secret-store-csi.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/secrets/wso2am-secret-store-provider-aws.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/secrets/wso2am-secret-store-provider-azure.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-gateway-api-gw-httproute.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2026, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: apim-wso2am-all-in-one-gateway-httproute
+  namespace: apim
+spec:
+  parentRefs:
+  - name: wso2-apim-gateway
+    sectionName: gateway-https
+  hostnames:
+  - gw.wso2.com
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: apim-wso2am-all-in-one-am-service
+      port: 8243
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-gateway-api-management-httproute.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2026, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: apim-wso2am-all-in-one-management-httproute
+  namespace: apim
+spec:
+  parentRefs:
+  - name: wso2-apim-gateway
+    sectionName: control-plane-https
+  hostnames:
+  - am.wso2.com
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: apim-wso2am-all-in-one-am-service
+      port: 9443
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-gateway-api-websocket-httproute.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2026, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: apim-wso2am-all-in-one-websocket-httproute
+  namespace: apim
+spec:
+  parentRefs:
+  - name: wso2-apim-gateway
+    sectionName: websocket-https
+  hostnames:
+  - websocket.wso2.com
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: apim-wso2am-all-in-one-am-service
+      port: 8099
+---
+# Source: wso2am-all-in-one/templates/am/wso2am-gateway-api-websub-httproute.yaml
+# -------------------------------------------------------------------------------------
+#
+# Copyright (c) 2026, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained 
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
+#
+# --------------------------------------------------------------------------------------
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: apim-wso2am-all-in-one-websub-httproute
+  namespace: apim
+spec:
+  parentRefs:
+  - name: wso2-apim-gateway
+    sectionName: websub-https
+  hostnames:
+  - websub.wso2.com
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: apim-wso2am-all-in-one-am-service
+      port: 8021
